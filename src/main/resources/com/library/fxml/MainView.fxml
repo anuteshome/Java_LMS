@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.library.controller.MainController"
+            stylesheets="@style.css">
+
+    <!-- ===== TOP HEADER ===== -->
+    <top>
+        <HBox styleClass="header" alignment="CENTER_LEFT" spacing="10">
+            <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
+            <Label text="📚" style="-fx-font-size: 28px;"/>
+            <VBox>
+                <Label text="Library Management System" styleClass="header-title"/>
+                <Label text="Manage Books • Members • Borrow Records" styleClass="header-subtitle"/>
+            </VBox>
+            <HBox HBox.hgrow="ALWAYS"/>
+            <Label fx:id="statusLabel" styleClass="status-label" text="● Connected"/>
+        </HBox>
+    </top>
+
+    <!-- ===== CENTER: TAB PANE ===== -->
+    <center>
+        <TabPane fx:id="tabPane" tabClosingPolicy="UNAVAILABLE" styleClass="main-tab-pane">
+
+            <!-- ========== BOOKS TAB ========== -->
+            <Tab text="📖 Books" fx:id="booksTab">
+                <VBox spacing="10" styleClass="tab-content">
+                    <padding><Insets top="15" right="15" bottom="15" left="15"/></padding>
+
+                    <!-- Search + Buttons -->
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <TextField fx:id="bookSearchField" promptText="Search by title, author, ISBN, category..."
+                                   styleClass="search-field" HBox.hgrow="ALWAYS"/>
+                        <Button text="🔍 Search"  onAction="#searchBooks"  styleClass="btn-primary"/>
+                        <Button text="↺ Refresh"  onAction="#loadAllBooks" styleClass="btn-secondary"/>
+                        <Button text="➕ Add Book" onAction="#showAddBook"  styleClass="btn-success"/>
+                        <Button text="✏ Edit"     onAction="#showEditBook" styleClass="btn-warning"/>
+                        <Button text="🗑 Delete"  onAction="#deleteBook"   styleClass="btn-danger"/>
+                    </HBox>
+
+                    <!-- Books Table -->
+                    <TableView fx:id="booksTable" VBox.vgrow="ALWAYS" styleClass="data-table">
+                        <columns>
+                            <TableColumn fx:id="bookIdCol"       text="ID"        prefWidth="50"/>
+                            <TableColumn fx:id="bookTitleCol"    text="Title"     prefWidth="220"/>
+                            <TableColumn fx:id="bookAuthorCol"   text="Author"    prefWidth="160"/>
+                            <TableColumn fx:id="bookIsbnCol"     text="ISBN"      prefWidth="140"/>
+                            <TableColumn fx:id="bookCategoryCol" text="Category"  prefWidth="120"/>
+                            <TableColumn fx:id="bookQtyCol"      text="Quantity"  prefWidth="80"/>
+                            <TableColumn fx:id="bookAvailCol"    text="Available" prefWidth="80"/>
+                        </columns>
+                    </TableView>
+
+                    <!-- Book Form -->
+                    <TitledPane fx:id="bookFormPane" text="Book Details" expanded="false" styleClass="form-pane">
+                        <GridPane hgap="10" vgap="10">
+                            <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+                            <Label text="Title:"    GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                            <TextField fx:id="bookTitleField"    GridPane.columnIndex="1" GridPane.rowIndex="0" prefWidth="250"/>
+                            <Label text="Author:"   GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+                            <TextField fx:id="bookAuthorField"   GridPane.columnIndex="3" GridPane.rowIndex="0" prefWidth="200"/>
+
+                            <Label text="ISBN:"     GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                            <TextField fx:id="bookIsbnField"     GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                            <Label text="Category:" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+                            <TextField fx:id="bookCategoryField" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+
+                            <Label text="Quantity:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                            <TextField fx:id="bookQtyField"      GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+
+                            <HBox spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.columnSpan="3">
+                                <Button text="💾 Save Book"   onAction="#saveBook"   styleClass="btn-success"/>
+                                <Button text="✖ Cancel"       onAction="#cancelBook" styleClass="btn-secondary"/>
+                            </HBox>
+                        </GridPane>
+                    </TitledPane>
+                </VBox>
+            </Tab>
+
+            <!-- ========== MEMBERS TAB ========== -->
+            <Tab text="👥 Members" fx:id="membersTab">
+                <VBox spacing="10" styleClass="tab-content">
+                    <padding><Insets top="15" right="15" bottom="15" left="15"/></padding>
+
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <TextField fx:id="memberSearchField" promptText="Search by name, email, phone..."
+                                   styleClass="search-field" HBox.hgrow="ALWAYS"/>
+                        <Button text="🔍 Search"    onAction="#searchMembers"   styleClass="btn-primary"/>
+                        <Button text="↺ Refresh"    onAction="#loadAllMembers"  styleClass="btn-secondary"/>
+                        <Button text="➕ Add Member" onAction="#showAddMember"   styleClass="btn-success"/>
+                        <Button text="✏ Edit"       onAction="#showEditMember"  styleClass="btn-warning"/>
+                        <Button text="🗑 Delete"    onAction="#deleteMember"    styleClass="btn-danger"/>
+                    </HBox>
+
+                    <TableView fx:id="membersTable" VBox.vgrow="ALWAYS" styleClass="data-table">
+                        <columns>
+                            <TableColumn fx:id="memberIdCol"    text="ID"      prefWidth="50"/>
+                            <TableColumn fx:id="memberNameCol"  text="Name"    prefWidth="180"/>
+                            <TableColumn fx:id="memberEmailCol" text="Email"   prefWidth="200"/>
+                            <TableColumn fx:id="memberPhoneCol" text="Phone"   prefWidth="130"/>
+                            <TableColumn fx:id="memberAddrCol"  text="Address" prefWidth="200"/>
+                            <TableColumn fx:id="memberActiveCol" text="Active" prefWidth="70"/>
+                        </columns>
+                    </TableView>
+
+                    <TitledPane fx:id="memberFormPane" text="Member Details" expanded="false" styleClass="form-pane">
+                        <GridPane hgap="10" vgap="10">
+                            <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+                            <Label text="Name:"    GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                            <TextField fx:id="memberNameField"  GridPane.columnIndex="1" GridPane.rowIndex="0" prefWidth="250"/>
+                            <Label text="Email:"   GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+                            <TextField fx:id="memberEmailField" GridPane.columnIndex="3" GridPane.rowIndex="0" prefWidth="200"/>
+
+                            <Label text="Phone:"   GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                            <TextField fx:id="memberPhoneField" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                            <Label text="Address:" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+                            <TextField fx:id="memberAddrField"  GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+
+                            <HBox spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.columnSpan="3">
+                                <Button text="💾 Save Member" onAction="#saveMember"   styleClass="btn-success"/>
+                                <Button text="✖ Cancel"       onAction="#cancelMember" styleClass="btn-secondary"/>
+                            </HBox>
+                        </GridPane>
+                    </TitledPane>
+                </VBox>
+            </Tab>
+
+            <!-- ========== BORROW TAB ========== -->
+            <Tab text="📋 Borrow / Return" fx:id="borrowTab">
+                <VBox spacing="10" styleClass="tab-content">
+                    <padding><Insets top="15" right="15" bottom="15" left="15"/></padding>
+
+                    <!-- Borrow a Book Form -->
+                    <TitledPane text="➕ Issue a Book" expanded="true" styleClass="form-pane">
+                        <GridPane hgap="10" vgap="10">
+                            <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+                            <Label text="Select Book:"   GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                            <ComboBox fx:id="borrowBookCombo" GridPane.columnIndex="1" GridPane.rowIndex="0" prefWidth="280"/>
+                            <Label text="Select Member:" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+                            <ComboBox fx:id="borrowMemberCombo" GridPane.columnIndex="3" GridPane.rowIndex="0" prefWidth="250"/>
+
+                            <Label text="Due Date:"     GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                            <DatePicker fx:id="dueDatePicker" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+                            <Button text="📤 Issue Book" onAction="#borrowBook"
+                                    GridPane.columnIndex="1" GridPane.rowIndex="2"
+                                    styleClass="btn-success"/>
+                        </GridPane>
+                    </TitledPane>
+
+                    <!-- Active Borrows Table -->
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="Active Borrow Records:" style="-fx-font-weight: bold; -fx-font-size: 14px;"/>
+                        <HBox HBox.hgrow="ALWAYS"/>
+                        <Button text="↺ Refresh Records" onAction="#loadBorrowRecords" styleClass="btn-secondary"/>
+                        <Button text="📥 Return Selected" onAction="#returnBook"        styleClass="btn-primary"/>
+                    </HBox>
+
+                    <TableView fx:id="borrowTable" VBox.vgrow="ALWAYS" styleClass="data-table">
+                        <columns>
+                            <TableColumn fx:id="brIdCol"         text="ID"          prefWidth="50"/>
+                            <TableColumn fx:id="brBookCol"       text="Book Title"   prefWidth="220"/>
+                            <TableColumn fx:id="brMemberCol"     text="Member"       prefWidth="160"/>
+                            <TableColumn fx:id="brBorrowDateCol" text="Borrow Date"  prefWidth="110"/>
+                            <TableColumn fx:id="brDueDateCol"    text="Due Date"     prefWidth="110"/>
+                            <TableColumn fx:id="brReturnDateCol" text="Return Date"  prefWidth="110"/>
+                            <TableColumn fx:id="brStatusCol"     text="Status"       prefWidth="100"/>
+                        </columns>
+                    </TableView>
+                </VBox>
+            </Tab>
+
+        </TabPane>
+    </center>
+
+    <!-- ===== BOTTOM STATUS BAR ===== -->
+    <bottom>
+        <HBox styleClass="status-bar" spacing="20" alignment="CENTER_LEFT">
+            <padding><Insets top="8" right="20" bottom="8" left="20"/></padding>
+            <Label fx:id="infoLabel" text="Ready" styleClass="info-label"/>
+            <HBox HBox.hgrow="ALWAYS"/>
+            <Label text="Library Management System v1.0" styleClass="version-label"/>
+        </HBox>
+    </bottom>
+
+</BorderPane>
